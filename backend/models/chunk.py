@@ -20,7 +20,7 @@ class Chunk(db.Model):
 
     content = db.Column(db.Text, nullable=False)
 
-    embedding = db.Column(Vector(1536))
+    embedding = db.Column(Vector(384))
 
     document = db.relationship(
         "Document",

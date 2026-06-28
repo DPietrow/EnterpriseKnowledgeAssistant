@@ -10,13 +10,18 @@ class Document(db.Model):
 
     filename = db.Column(db.String(255), nullable=False)
 
+    filepath = db.Column(db.String(500), nullable=False)
+
     title = db.Column(db.String(255))
 
     page_count = db.Column(db.Integer)
 
     chunk_count = db.Column(db.Integer, default=0)
 
-    status = db.Column(db.String(30), default="uploaded")
+    status = db.Column(db.String(30),
+    nullable=False,
+    default="uploaded"
+    )
 
     uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
 

@@ -1,0 +1,10 @@
+flask 
+flask-cors
+flask-sqlalchemy 
+flask-migrate 
+python-dotenv 
+psycopg2-binary 
+pgvector 
+sentence-transformers
+pymupdf
+accelerate

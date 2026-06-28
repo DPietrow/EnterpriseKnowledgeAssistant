@@ -1,32 +1,42 @@
+print("=" * 60)
+print("APP STARTED")
+print("=" * 60)
+
 from flask import Flask
-from sqlalchemy import text
-
-from config import Config
+from flask_cors import CORS
+from flask_migrate import Migrate
 from extensions import db
+from config import Config
 
-# Import models so SQLAlchemy registers them
-from models.document import Document
-from models.chunk import Chunk
-from models.conversation import Conversation
-from models.message import Message
+import models
 
+migrate = Migrate()
 
 def create_app():
+    print("create_app called")
     app = Flask(__name__)
-
     app.config.from_object(Config)
 
+    CORS(
+        app,
+        origins=[
+            "http://localhost:5173",
+            "http://127.0.0.1:5173"
+        ]
+    )
     db.init_app(app)
+    migrate.init_app(app, db)
 
-    with app.app_context():
-        db.create_all()
-        print("Database connected and tables created!")
+    # force model registration 
+    from models import Document, Chunk, Conversation, Message
+
+
+    from routes.document_routes import document_bp
+    app.register_blueprint(document_bp, url_prefix="/api/documents")
 
     return app
 
-
 app = create_app()
-
 
 if __name__ == "__main__":
     app.run(debug=True)
