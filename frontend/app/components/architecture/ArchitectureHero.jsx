@@ -1,4 +1,4 @@
-export default function Hero() {
+export default function ArchitectureHero() {
   return (
     <section className="relative overflow-hidden">
 
@@ -22,10 +22,7 @@ export default function Hero() {
 
         <h1 className="mt-8 text-7xl md:text-7xl font-black tracking-tight">
 
-          Enterprise
-          <br />
-
-          Knowledge Assistant
+          Enterprise Knowledge Assistant
 
         </h1>
 

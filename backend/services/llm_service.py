@@ -1,8 +1,6 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM, TextIteratorStreamer
 from prompts import SYSTEM_PROMPT
 import torch
-import threading
-
 
 class LLMService:
 
@@ -81,9 +79,6 @@ class LLMService:
                     max_new_tokens=200,
                     do_sample=False
                 )
-
-        thread = threading.Thread(target=run)
-        thread.start()
 
         for token in streamer:
             print(repr(token))

@@ -7,6 +7,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from extensions import db
 from config import Config
+from services.embedding_service import EmbeddingService
 
 import models
 
@@ -33,7 +34,7 @@ def create_app():
 
     from routes.document_routes import document_bp
     app.register_blueprint(document_bp, url_prefix="/api/documents")
-
+    EmbeddingService.initialize()
     return app
 
 app = create_app()

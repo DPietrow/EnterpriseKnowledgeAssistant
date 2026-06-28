@@ -26,30 +26,46 @@ export default function AssistantBubble({ message }) {
 
       <div
         className="
-        max-w-3xl
-        rounded-2xl
-        bg-slate-800
-        px-5
-        py-4
-        text-white
-        shadow
+          max-w-3xl
+          rounded-2xl
+          bg-slate-800/80
+          px-5
+          py-4
+          text-white
+          shadow-lg
+          backdrop-blur-md
+          transition-all
+          duration-200
         "
       >
 
         {message.status === "thinking" ? (
-
           <TypingIndicator />
-
         ) : (
+          <div className="relative">
 
-          <MarkdownRenderer>
+            <div
+              className="
+                transition-all
+                duration-150
+                ease-out
+                whitespace-pre-wrap
+              "
+            >
+              <MarkdownRenderer>
+                {message.content}
+              </MarkdownRenderer>
+            </div>
+        
+            {/* streaming cursor */}
+            <span className="relative">
+            {message.status === "streaming" && (
+              <span className="ml-1 animate-pulse">▍</span>
+            )}
+            </span>
 
-            {message.content}
-
-          </MarkdownRenderer>
-
+          </div>
         )}
-
         {message.citations?.map((c, i) => (
 
           <CitationCard

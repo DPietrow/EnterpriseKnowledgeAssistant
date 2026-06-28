@@ -18,12 +18,44 @@ class Document(db.Model):
 
     chunk_count = db.Column(db.Integer, default=0)
 
-    status = db.Column(db.String(30),
-    nullable=False,
-    default="uploaded"
+    # --------------------------
+    # JOB STATE
+    # --------------------------
+
+    status = db.Column(
+        db.String(30),
+        nullable=False,
+        default="queued",
+        server_default="queued"
     )
 
-    uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
+    stage = db.Column(
+        db.String(30),
+        nullable=False,
+        default="queued"
+    )
+
+    stage_order = db.Column(db.Integer, nullable=False, default=0)
+
+
+    error_message = db.Column(
+        db.Text
+    )
+
+    uploaded_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    started_at = db.Column(
+        db.DateTime
+    )
+
+    finished_at = db.Column(
+        db.DateTime
+    )
+
+    # --------------------------
 
     chunks = db.relationship(
         "Chunk",

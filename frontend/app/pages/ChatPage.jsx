@@ -1,42 +1,27 @@
-import { useRef } from "react";
-
 import ChatHeader from "../components/chat/ChatHeader";
 import ChatWindow from "../components/chat/ChatWindow";
 import ChatInput from "../components/chat/ChatInput";
+import RequestLifecycleIndicator from "../components/chat/RequestLifecycleIndicator";
 
 import useChat from "../hooks/useChat";
 import useAutoScroll from "../hooks/useAutoScroll";
+import { useRef } from "react";
 
 export default function ChatPage() {
-
-  const { messages, send } = useChat();
-
+  const { messages, send, lifecycle } = useChat();
   const bottomRef = useRef(null);
 
   useAutoScroll(bottomRef, [messages]);
 
   return (
-
-    <div className="flex h-screen flex-col bg-slate-950">
-
+    <>
       <ChatHeader />
 
-      <ChatWindow
+      <RequestLifecycleIndicator stage={lifecycle.stage} />
 
-        messages={messages}
+      <ChatWindow messages={messages} bottomRef={bottomRef} />
 
-        bottomRef={bottomRef}
-
-      />
-
-      <ChatInput
-
-        onSend={send}
-
-      />
-
-    </div>
-
+      <ChatInput onSend={send} />
+    </>
   );
-
 }

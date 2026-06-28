@@ -13,38 +13,28 @@ class ChunkingService:
         return text.strip()
 
     @staticmethod
-    def chunk_text(
-        text: str,
-        chunk_size: int = 800,
-        overlap: int = 100,
-        start_index: int = 0
-    ):
-        """
-        Splits text into overlapping chunks.
+    def chunk_text(text, start_index=0):
 
-        start_index allows chunk numbering to continue across pages.
-        """
+        #  HARD GUARD: ensure string input
+        if isinstance(text, list):
+            text = " ".join(text)
+
+        if not isinstance(text, str):
+            text = str(text)
 
         text = ChunkingService.clean_text(text)
 
         chunks = []
+        words = text.split()
+        chunk_size = 200
 
-        start = 0
-        chunk_index = start_index
+        for i in range(0, len(words), chunk_size):
 
-        while start < len(text):
-
-            end = start + chunk_size
+            chunk = " ".join(words[i:i + chunk_size])
 
             chunks.append({
-                "chunk_index": chunk_index,
-                "content": text[start:end]
+                "chunk_index": start_index + len(chunks),
+                "content": chunk
             })
-
-            chunk_index += 1
-            start = end - overlap
-
-            if start < 0:
-                start = 0
 
         return chunks
