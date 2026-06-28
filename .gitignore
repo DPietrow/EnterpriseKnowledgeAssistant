@@ -1,13 +1,13 @@
 # Python
 .venv/
 __pycache__/
-*.pyc
+*.py[cod]
 
 # Environment
 .env
 backend/.env
 
-# Uploaded documents
+# Runtime uploads
 backend/uploads/
 
 # Node
@@ -19,5 +19,5 @@ frontend/dist/
 .idea/
 
 # OS
-.DS_Store
 Thumbs.db
+.DS_Store
