@@ -36,7 +36,7 @@ def create_app():
 
     return app
 
-
+print("🚀 Flask starting...")
 app = create_app()
 
 if __name__ == "__main__":
