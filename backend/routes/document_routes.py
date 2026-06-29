@@ -86,7 +86,11 @@ def search():
 @document_bp.route("/ask-stream", methods=["POST"])
 def ask_stream():
 
-    question = request.json["query"]
+    data = request.get_json(force=True, silent=True) or {}
+    question = data.get("query")
+
+    if not question:
+        return jsonify({"error": "missing query"}), 400
 
     chunks = RetrievalService.search(question)
     context = PromptService.build_context(chunks)
