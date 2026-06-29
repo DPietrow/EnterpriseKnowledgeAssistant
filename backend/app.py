@@ -10,7 +10,13 @@ def create_app():
     print("🚀 Flask factory starting...")
 
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, resources={r"/*": {
+        "origins": [
+            "https://enterprise-knowledge-assistant-tau.vercel.app"
+        ]
+    }},
+     supports_credentials=True
+    )
     db_url = os.getenv("DATABASE_URL")
     print("ENV DATABASE_URL:", bool(db_url))
     print("ENV PORT:", os.getenv("PORT"))
@@ -25,7 +31,7 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["UPLOAD_FOLDER"] = os.path.join("/tmp", "uploads")
     os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
-    
+
     db.init_app(app)
     migrate.init_app(app, db)
     print("🔥 BEFORE IMPORT document_routes")

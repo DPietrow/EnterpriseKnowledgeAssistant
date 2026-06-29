@@ -83,7 +83,7 @@ def search():
         for result in results
     ])
 
-@document_bp.route("/ask-stream", methods=["POST"])
+@document_bp.route("/ask-stream", methods=["POST", "OPTIONS"])
 def ask_stream():
 
     data = request.get_json(force=True, silent=True) or {}
