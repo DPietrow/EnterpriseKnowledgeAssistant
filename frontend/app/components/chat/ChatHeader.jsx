@@ -1,4 +1,4 @@
-import { heroTypography } from "../../styles/heroTypography";
+import { heroTypography } from "../../styles/herotypography";
 
 export default function ChatHeader() {
   return (
