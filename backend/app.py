@@ -23,7 +23,9 @@ def create_app():
 
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
+    app.config["UPLOAD_FOLDER"] = os.path.join("/tmp", "uploads")
+    os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+    
     db.init_app(app)
     migrate.init_app(app, db)
     print("🔥 BEFORE IMPORT document_routes")
