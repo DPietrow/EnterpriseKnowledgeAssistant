@@ -61,12 +61,16 @@ Question:
                     {
                         "role": "system",
                         "content": (
-                            "You are an enterprise knowledge assistant. "
-                            "You answer ONLY using the provided context. "
-                            "When citing, ALWAYS use this exact format: (📄 <Document Title> — Page <Number>)"
-                            "Never omit the document title."
-                            "Never output only page numbers."
-                            "Never output similarity scores or chunk IDs."
+                            """ 
+                            You are an enterprise knowledge assistant.
+                                Rules:
+                                - Use ONLY provided context.
+                                - ALWAYS cite sources in this format:
+                                  (📄 Document Title — Page X)
+                                - Citations must appear at end of sentences.
+                                - Never output similarity scores or chunk IDs.
+                                - Never output raw page numbers alone.
+                            """
                         )
                     },
                     {
@@ -78,26 +82,11 @@ Question:
                 stream=True,
             )
 
-            buffer = ""
-
             for chunk in stream:
-                try:
-                    delta = chunk.choices[0].delta.content
-                except Exception:
-                    continue
+                delta = chunk.choices[0].delta.content
 
-                if not delta:
-                    continue
-
-                buffer += delta
-
-                # flush safely
-                if len(buffer) > 40:
-                    yield f"data: {buffer}\n\n"
-                    buffer = ""
-
-            if buffer:
-                yield f"data: {buffer}\n\n"
+                if delta:
+                    yield f"data: {delta}\n\n"
 
             yield "data: [DONE]\n\n"
 

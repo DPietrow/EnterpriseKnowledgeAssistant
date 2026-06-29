@@ -8,14 +8,14 @@ class PromptService:
         for chunk in chunks:
 
             pieces.append(
-f"""SOURCE:
-Title: {chunk["document_title"]}
-File: {chunk.get("document_filename")}
-Page: {chunk["page_number"]}
-
-TEXT:
-{chunk["content"]}
-"""
+                f"""=== SOURCE ===
+                Title: {chunk["document_title"]}
+                File: {chunk.get("document_filename", "Unknown")}
+                Page: {chunk["page_number"]}
+                
+                Content:
+                {chunk["content"]}
+                === END SOURCE ==="""
             )
 
         return "\n\n".join(pieces)
