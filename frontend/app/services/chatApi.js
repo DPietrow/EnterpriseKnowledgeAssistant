@@ -1,7 +1,7 @@
 import API_BASE from "./api";
 
 export async function openChatStream(question) {
-    return fetch(`${API_BASE}/api/documents/ask`, {
+    return fetch(`${API_BASE}/api/documents/ask-stream`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

@@ -9,7 +9,7 @@ export const uploadDocument = async (file) => {
 };
 
 export const askQuestion = async (query) => {
-  return fetch("/api/documents/ask", {
+  return fetch("/api/documents/ask-stream", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ query })

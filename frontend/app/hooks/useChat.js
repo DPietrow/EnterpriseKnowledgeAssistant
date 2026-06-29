@@ -61,7 +61,7 @@ export default function useChat() {
     safeSetStage("retrieving");
 
     const res = await fetch(
-      "https://enterpriseknowledgeassistant.onrender.com/api/documents/ask",
+      "https://enterpriseknowledgeassistant.onrender.com/api/documents/ask-stream",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
