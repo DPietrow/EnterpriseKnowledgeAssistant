@@ -107,7 +107,7 @@ def ask_stream():
         for token in StreamingService.stream(question, context, chunks):
             yield token
 
-    response = Response(generate(), mimetype="text/event-stream")
+    response = Response(generate(), mimetype="text/plain")
 
     response.headers["Access-Control-Allow-Origin"] = "https://apollo-assistant.com"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
