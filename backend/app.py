@@ -17,12 +17,12 @@ def create_app():
         
     CORS(
         app,
-        resources={r"/*": {
+        resources={r"/api/*": {
             "origins": "https://enterprise-knowledge-assistant-tau.vercel.app"
         }},
-        supports_credentials=True,
-        methods=["GET", "POST", "OPTIONS"],
-        allow_headers=["*"]
+        supports_credentials=False,
+        allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "OPTIONS"]
     )
 
     db_url = os.getenv("DATABASE_URL")
@@ -56,6 +56,10 @@ def create_app():
     @app.route("/health")
     def health_check():
         return "healthy", 200
+    
+    @app.route("/api/debug-options", methods=["OPTIONS"])
+    def debug_options():
+        return "ok", 200
 
     print("✅ App created")
     return app
