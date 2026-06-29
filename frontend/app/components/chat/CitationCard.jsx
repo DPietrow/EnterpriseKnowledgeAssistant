@@ -1,10 +1,27 @@
 export default function CitationCard({ citation }) {
-
-  const title =
+  // Normalize title from all possible backend shapes
+  // test add
+  const rawTitle =
     citation.title ||
     citation.document_title ||
     citation.filename ||
-    "Unknown Document";
+    citation.document ||
+    "";
+
+  const title =
+    rawTitle && rawTitle.trim()
+      ? rawTitle.replace(".pdf", "")
+      : "Unknown Document";
+
+  const page =
+    citation.page ??
+    citation.page_number ??
+    "Unknown";
+
+  const score =
+    typeof citation.score === "number"
+      ? citation.score
+      : 0;
 
   return (
     <div
@@ -22,19 +39,17 @@ export default function CitationCard({ citation }) {
       cursor-pointer
       "
     >
-
       <div className="font-semibold">
-        📄 {title.replace(".pdf", "")}
+        📄 {title}
       </div>
 
       <div className="text-slate-400">
-        Page {citation.page}
+        Page {page}
       </div>
 
       <div className="text-xs text-blue-300">
-        Similarity {(citation.score * 100).toFixed(1)}%
+        Similarity {(score * 100).toFixed(1)}%
       </div>
-
     </div>
   );
 }
