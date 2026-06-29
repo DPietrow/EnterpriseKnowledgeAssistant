@@ -22,7 +22,7 @@ export default function ArchitectureHero() {
 
         <h1 className="mt-8 text-7xl md:text-7xl font-black tracking-tight">
 
-          Enterprise Knowledge Assistant
+          Apollo: Enterprise Knowledge Assistant
 
         </h1>
 

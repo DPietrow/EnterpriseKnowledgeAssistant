@@ -16,7 +16,7 @@ export default function Navbar() {
 
         {/* Brand */}
         <div className="text-white font-semibold tracking-tight">
-          Enterprise Knowledge Assistant
+          Apollo: Enterprise Knowledge Assistant
         </div>
 
         {/* Links */}

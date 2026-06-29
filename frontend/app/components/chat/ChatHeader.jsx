@@ -7,7 +7,7 @@ export default function ChatHeader() {
       <div className="max-w-4xl mx-auto text-center">
 
         <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white">
-          Enterprise Knowledge Assistant
+          Apollo: Enterprise Knowledge Assistant
         </h1>
 
         <p className="mt-4 text-lg text-slate-400">

@@ -85,13 +85,26 @@ You must be precise, conservative, and faithful to the context.
                 stream=True,
             )
 
-            # 🔥 PURE DELTA STREAM (NO BUFFER, NO SSE)
+            buffer = ""
+
             for chunk in stream:
                 delta = chunk.choices[0].delta.content
-                if delta:
-                    yield delta
-
-            yield "\n[DONE]"
+            
+                if not delta:
+                    continue
+                
+                buffer += delta
+            
+                if (
+                    len(buffer) > 80
+                    or buffer.endswith(".")
+                    or buffer.endswith("\n")
+                ):
+                    yield buffer
+                    buffer = ""
+            
+            if buffer:
+                yield buffer
 
         except Exception as e:
             import traceback

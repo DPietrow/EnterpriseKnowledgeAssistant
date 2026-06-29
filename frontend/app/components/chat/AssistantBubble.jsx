@@ -21,7 +21,7 @@ export default function AssistantBubble({ message }) {
         text-lg
         "
       >
-        🤖
+        🌞
       </div>
 
       <div
