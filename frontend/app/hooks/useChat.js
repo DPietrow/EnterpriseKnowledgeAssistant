@@ -57,21 +57,71 @@ export default function useChat() {
 
     safeSetStage("streaming");
 
+    let buffer = "";
+
     while (true) {
       const { value, done } = await reader.read();
       if (done) break;
-
-      const chunk = decoder.decode(value, { stream: true });
-
-      fullText += chunk;
-
-      setMessages((prev) =>
-        prev.map((m) =>
-          m.id === assistantId
-            ? { ...m, content: fullText }
-            : m
-        )
-      );
+    
+      buffer += decoder.decode(value, { stream: true });
+    
+      // SSE messages are separated by double newline
+      const events = buffer.split("\n\n");
+      buffer = events.pop(); // keep incomplete chunk
+    
+      for (const event of events) {
+        const line = event.trim();
+    
+        if (!line.startsWith("data:")) continue;
+    
+        const jsonStr = line.replace(/^data:\s*/, "").trim();
+    
+        if (!jsonStr) continue;
+    
+        if (jsonStr === "[DONE]") {
+          safeSetStage("completed");
+          continue;
+        }
+    
+        let parsed;
+        try {
+          parsed = JSON.parse(jsonStr);
+        } catch (e) {
+          continue;
+        }
+    
+        // lifecycle updates
+        if (parsed.type === "lifecycle") {
+          safeSetStage(parsed.stage);
+          continue;
+        }
+    
+        // token streaming
+        if (parsed.type === "token") {
+          fullText += parsed.value;
+        
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantId
+                ? { ...m, content: fullText }
+                : m
+            )
+          );
+          continue;
+        }
+    
+        // citations
+        if (parsed.type === "citations") {
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantId
+                ? { ...m, citations: parsed.data }
+                : m
+            )
+          );
+          continue;
+        }
+      }
     }
 
     setMessages((prev) =>
