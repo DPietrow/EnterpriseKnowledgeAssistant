@@ -1,13 +1,14 @@
 export default function CitationCard({ citation }) {
   // Normalize title from all possible backend shapes
   // test add
+  console.log("Citation:", citation);
+
   const rawTitle =
     citation.title ||
     citation.document_title ||
     citation.filename ||
     citation.document ||
     "";
-
   const title =
     rawTitle && rawTitle.trim()
       ? rawTitle.replace(".pdf", "")
