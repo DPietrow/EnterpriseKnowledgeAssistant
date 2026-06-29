@@ -11,7 +11,7 @@ class EmbeddingService:
         Call this once at app startup to avoid cold-start latency.
         """
         print("[EMBEDDING] Preloading MiniLM model...")
-        cls._model = SentenceTransformer("all-MiniLM-L6-v2")
+        cls._model = SentenceTransformer("all-mpnet-base-v2")
         print("[EMBEDDING] Model loaded successfully")
 
     @classmethod
@@ -22,7 +22,7 @@ class EmbeddingService:
             with cls._lock:
                 if cls._model is None:
                     print("[EMBEDDING] Lazy loading model (cold start)...")
-                    cls._model = SentenceTransformer("all-MiniLM-L6-v2")
+                    cls._model = SentenceTransformer("all-mpnet-base-v2")
         return cls._model
 
     @classmethod
