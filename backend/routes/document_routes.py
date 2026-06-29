@@ -85,7 +85,8 @@ def search():
 
 @document_bp.route("/ask-stream", methods=["POST", "OPTIONS"])
 def ask_stream():
-
+    if request.method == "OPTIONS":
+        return ("", 204)
     data = request.get_json(force=True, silent=True) or {}
     question = data.get("query")
 
@@ -95,11 +96,14 @@ def ask_stream():
     chunks = RetrievalService.search(question)
     context = PromptService.build_context(chunks)
 
-    return Response(
+    
+    response = Response(
         StreamingService.stream(question, context, chunks),
         mimetype="text/event-stream",
-        headers={
-            "Cache-Control": "no-cache",
-            "X-Accel-Buffering": "no"
-        }
     )
+
+    response.headers.add("Access-Control-Allow-Origin", "https://enterprise-knowledge-assistant-tau.vercel.app")
+    response.headers.add("Access-Control-Allow-Headers", "*")
+    response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+
+    return response

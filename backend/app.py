@@ -3,7 +3,7 @@ from flask_cors import CORS
 load_dotenv()
 
 import os
-from flask import Flask
+from flask import Flask, request
 from extensions import db, migrate
 
 def create_app():
@@ -11,12 +11,18 @@ def create_app():
 
     app = Flask(__name__)
 
+    @app.before_request
+    def debug():
+        print("➡️", request.method, request.path)
+        
     CORS(
         app,
-        resources={r"/api/*": {
+        resources={r"/*": {
             "origins": "https://enterprise-knowledge-assistant-tau.vercel.app"
         }},
-        supports_credentials=True
+        supports_credentials=True,
+        methods=["GET", "POST", "OPTIONS"],
+        allow_headers=["*"]
     )
 
     db_url = os.getenv("DATABASE_URL")
