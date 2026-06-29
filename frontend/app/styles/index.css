@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* optional global styling */
+html, body {
+  height: 100%;
+  background: #0b1220;
+  color: white;
+  font-family: Arial, sans-serif;
+}
