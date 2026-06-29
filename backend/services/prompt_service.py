@@ -9,15 +9,12 @@ class PromptService:
 
             pieces.append(
                 f"""
-Document:
-{chunk["document_title"]}
+📄 Document: {chunk["document_title"]}
+📄 File: {chunk.get("document_filename", "Unknown file")}
+📍 Page: {chunk["page_number"]}
 
-Page:
-{chunk["page_number"]}
-
-Content:
 {chunk["content"]}
 """
             )
 
-        return "\n\n".join(pieces)
+        return "\n\n---\n\n".join(pieces)

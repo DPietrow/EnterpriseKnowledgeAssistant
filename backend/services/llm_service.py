@@ -54,17 +54,48 @@ Question:
     def stream_generate(question, context):
         client = LLMService.get_client()
     
-        stream = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "You are an enterprise knowledge assistant. You answer ONLY using the provided context."},
-                {"role": "user", "content": f"Context:\n{context}\n\nQuestion:\n{question}"}
-            ],
-            temperature=0.2,
-            stream=True
-        )
+        try:
+            stream = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are an enterprise knowledge assistant. "
+                            "You answer ONLY using the provided context. "
+                            "Be complete, structured, and do not cut off mid-sentence."
+                        )
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Context:\n{context}\n\nQuestion:\n{question}"
+                    }
+                ],
+                temperature=0.2,
+                stream=True,
+            )
     
-        for chunk in stream:
-            token = chunk.choices[0].delta.content
-            if token:
-                yield token
+            buffer = ""
+    
+            for chunk in stream:
+                delta = chunk.choices[0].delta.content
+    
+                if not delta:
+                    continue
+                
+                buffer += delta
+    
+                # 🚀 Flush on sentence boundaries for clean UX
+                if buffer.endswith((" ", ".", "?", "!", "\n")):
+                    yield buffer
+                    buffer = ""
+    
+            # 🔥 flush remaining buffer at end
+            if buffer:
+                yield buffer
+    
+            # optional completion marker (VERY useful for frontend)
+            yield "\n\n[DONE]"
+    
+        except Exception as e:
+            yield f"\n\n[STREAM ERROR]: {str(e)}"
