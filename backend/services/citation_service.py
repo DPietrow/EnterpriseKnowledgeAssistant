@@ -2,7 +2,8 @@ class CitationService:
 
     @staticmethod
     def build(chunks):
-
+        for chunk in chunks:
+            print(chunk)
         return [
             {
                 "title": chunk.get("document_title", "Unknown Document"),
