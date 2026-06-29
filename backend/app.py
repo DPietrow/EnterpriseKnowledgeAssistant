@@ -18,7 +18,7 @@ def create_app():
     CORS(
         app,
         resources={r"/api/*": {
-            "origins": "https://enterprise-knowledge-assistant-tau.vercel.app"
+            "origins": "https://apollo-assistant.com"
         }},
         supports_credentials=False,
         allow_headers=["Content-Type", "Authorization"],

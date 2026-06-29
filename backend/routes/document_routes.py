@@ -86,7 +86,7 @@ def search():
 
 @document_bp.route("/ask-stream", methods=["POST"])
 @cross_origin(
-    origins="https://enterprise-knowledge-assistant-tau.vercel.app"
+    origins="https://apollo-assistant.com"
 )
 def ask_stream():
     data = request.get_json(force=True, silent=True) or {}
