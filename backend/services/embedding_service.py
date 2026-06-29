@@ -1,4 +1,3 @@
-from sentence_transformers import SentenceTransformer
 import threading
 
 class EmbeddingService:
@@ -7,6 +6,7 @@ class EmbeddingService:
 
     @classmethod
     def initialize(cls):
+        from sentence_transformers import SentenceTransformer
         """
         Call this once at app startup to avoid cold-start latency.
         """
@@ -16,6 +16,8 @@ class EmbeddingService:
 
     @classmethod
     def get_model(cls):
+        from sentence_transformers import SentenceTransformer
+
         if cls._model is None:
             with cls._lock:
                 if cls._model is None:
