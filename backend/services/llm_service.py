@@ -62,14 +62,17 @@ Question:
                         "role": "system",
                         "content": (
                             """ 
-                            You are an enterprise knowledge assistant.
+                            You MUST ALWAYS include citations.
+                            
+                                CITATION FORMAT (mandatory):
+                                (📄 {Document Title} — Page {Page Number})
+
                                 Rules:
-                                - Use ONLY provided context.
-                                - ALWAYS cite sources in this format:
-                                  (📄 Document Title — Page X)
-                                - Citations must appear at end of sentences.
-                                - Never output similarity scores or chunk IDs.
-                                - Never output raw page numbers alone.
+                                - Always include document title
+                                - Never output page numbers alone
+                                - Never output similarity scores or chunk IDs
+                                - Citations must appear at end of sentence only
+                                - Do NOT place citations mid-word or mid-sentence
                             """
                         )
                     },
@@ -82,11 +85,22 @@ Question:
                 stream=True,
             )
 
+            buffer = ""
+
             for chunk in stream:
                 delta = chunk.choices[0].delta.content
+                if not delta:
+                    continue
+                
+                buffer += delta
 
-                if delta:
-                    yield f"data: {delta}\n\n"
+                # flush on sentence boundary
+                if any(buffer.endswith(p) for p in [".", "?", "!", "\n"]):
+                    yield f"data: {buffer}\n\n"
+                    buffer = ""
+
+            if buffer:
+                yield f"data: {buffer}\n\n"
 
             yield "data: [DONE]\n\n"
 

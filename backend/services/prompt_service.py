@@ -8,6 +8,7 @@ class PromptService:
         for chunk in chunks:
 
             pieces.append(
+              pieces.append(
                 f"""=== SOURCE ===
                 Title: {chunk["document_title"]}
                 File: {chunk.get("document_filename", "Unknown")}
@@ -16,6 +17,7 @@ class PromptService:
                 Content:
                 {chunk["content"]}
                 === END SOURCE ==="""
+                )
             )
 
         return "\n\n".join(pieces)
