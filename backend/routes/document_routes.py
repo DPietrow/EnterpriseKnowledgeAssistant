@@ -89,7 +89,6 @@ def ask_stream():
     question = request.json["query"]
 
     chunks = RetrievalService.search(question)
-
     context = PromptService.build_context(chunks)
 
     return Response(

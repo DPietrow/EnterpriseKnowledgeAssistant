@@ -1,41 +1,35 @@
-print("=" * 60)
-print("APP STARTED")
-print("=" * 60)
-
+from dotenv import load_dotenv
+load_dotenv()
+import os
 from flask import Flask
-from flask_cors import CORS
-from flask_migrate import Migrate
 from extensions import db
-from config import Config
-from services.embedding_service import EmbeddingService
-
-import models
-
-migrate = Migrate()
 
 def create_app():
-    print("create_app called")
+
     app = Flask(__name__)
-    app.config.from_object(Config)
 
-    CORS(
-        app,
-        origins=[
-            "http://localhost:5173",
-            "http://127.0.0.1:5173"
-        ]
-    )
+    db_url = os.getenv("DATABASE_URL")
+
+    if not db_url:
+        raise Exception("DATABASE_URL is missing")
+
+    # 🔥 normalize Render/Postgres compatibility
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
+
+    if db_url.startswith("postgresql://"):
+        db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
     db.init_app(app)
-    migrate.init_app(app, db)
-
-    # force model registration 
-    from models import Document, Chunk, Conversation, Message
-
 
     from routes.document_routes import document_bp
     app.register_blueprint(document_bp, url_prefix="/api/documents")
-    EmbeddingService.initialize()
+
     return app
+
 
 app = create_app()
 
