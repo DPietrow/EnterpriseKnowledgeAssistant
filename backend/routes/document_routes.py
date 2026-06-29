@@ -7,6 +7,7 @@ from flask import (
     current_app,
     stream_with_context
 )
+from flask_cors import cross_origin
 from werkzeug.utils import secure_filename
 from extensions import db
 from models.document import Document
@@ -83,7 +84,10 @@ def search():
         for result in results
     ])
 
-@document_bp.route("/ask-stream", methods=["POST", "OPTIONS"])
+@document_bp.route("/ask-stream", methods=["POST"])
+@cross_origin(
+    origins="https://enterprise-knowledge-assistant-tau.vercel.app"
+)
 def ask_stream():
     data = request.get_json(force=True, silent=True) or {}
     question = data.get("query")
