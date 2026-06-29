@@ -49,3 +49,22 @@ Question:
         )
 
         return response.choices[0].message.content
+    
+    @staticmethod
+    def stream_generate(question, context):
+        client = LLMService.get_client()
+    
+        stream = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are an enterprise knowledge assistant. You answer ONLY using the provided context."},
+                {"role": "user", "content": f"Context:\n{context}\n\nQuestion:\n{question}"}
+            ],
+            temperature=0.2,
+            stream=True
+        )
+    
+        for chunk in stream:
+            token = chunk.choices[0].delta.content
+            if token:
+                yield token
