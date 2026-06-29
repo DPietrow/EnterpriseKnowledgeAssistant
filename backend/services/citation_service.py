@@ -5,7 +5,8 @@ class CitationService:
 
         return [
             {
-                "document": chunk["document_title"],
+                "title": chunk["document_title"],
+                "filename": chunk.get("document_filename"),
                 "page": chunk["page_number"],
                 "score": round(chunk["score"], 4)
             }
