@@ -1,7 +1,12 @@
 export default function CitationCard({ citation }) {
 
-  return (
+  const title =
+    citation.title ||
+    citation.document_title ||
+    citation.filename ||
+    "Unknown Document";
 
+  return (
     <div
       className="
       mt-3
@@ -19,25 +24,17 @@ export default function CitationCard({ citation }) {
     >
 
       <div className="font-semibold">
-
-        📄 {citation.document}
-
+        📄 {title.replace(".pdf", "")}
       </div>
 
       <div className="text-slate-400">
-
         Page {citation.page}
-
       </div>
 
       <div className="text-xs text-blue-300">
-
         Similarity {(citation.score * 100).toFixed(1)}%
-
       </div>
 
     </div>
-
   );
-
 }
