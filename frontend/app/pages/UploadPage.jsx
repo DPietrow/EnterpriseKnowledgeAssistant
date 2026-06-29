@@ -1,5 +1,5 @@
 import useUploadPipeline from "../hooks/useUploadPipeline";
-import { heroTypography } from "../styles/heroTypography";
+import { heroTypography } from "../styles/herotypography";
 import UploadTrace from "../components/upload/UploadTrace";
 
 export default function UploadPage() {

@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 from flask import Flask
-from extensions import db
+from extensions import db, migrate
 
 def create_app():
 
@@ -24,6 +24,7 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     from routes.document_routes import document_bp
     app.register_blueprint(document_bp, url_prefix="/api/documents")
@@ -32,7 +33,6 @@ def create_app():
 
 
 app = create_app()
-with app.app_context():
-    db.create_all()
+
 if __name__ == "__main__":
     app.run(debug=True)
