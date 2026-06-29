@@ -29,9 +29,9 @@ class RetrievalService:
             {
                 "content": chunk.content,
                 "page_number": chunk.page_number,
-                "document_title": chunk.document.title,
-                "document_filename": chunk.document.filename,
+                "document_title": title,
+                "document_filename": filename,
                 "score": float(score)
             }
-            for chunk, score in results
+            for chunk, title, filename, score in results
         ]
