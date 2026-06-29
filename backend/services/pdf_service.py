@@ -1,10 +1,9 @@
-import fitz  # PyMuPDF
-
-
 class PdfService:
 
     @staticmethod
     def extract_metadata(filepath):
+        import fitz  # PyMuPDF
+
         doc = fitz.open(filepath)
 
         return {
@@ -29,6 +28,7 @@ class PdfService:
             }
         ]
         """
+        import fitz  # PyMuPDF
 
         doc = fitz.open(filepath)
 
