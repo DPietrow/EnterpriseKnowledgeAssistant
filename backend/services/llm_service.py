@@ -63,7 +63,11 @@ Question:
                         "content": (
                             "You are an enterprise knowledge assistant. "
                             "You answer ONLY using the provided context. "
-                            "Be complete, structured, and do not cut off mid-sentence."
+                            "When you use information, you MUST cite it like this:"
+                            "(📄 {Document Title}, Page {Page Number})"
+                            "Do NOT output raw similarity scores or chunk IDs."
+                            "Do NOT say 'Page 2' alone."
+                            "Always include the document title with page number in parentheses immediately after the fact."
                         )
                     },
                     {
