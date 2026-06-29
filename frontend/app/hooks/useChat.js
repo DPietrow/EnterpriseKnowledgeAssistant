@@ -59,6 +59,8 @@ export default function useChat() {
 
     let buffer = "";
 
+    let buffer = "";
+
     while (true) {
       const { value, done } = await reader.read();
       if (done) break;
