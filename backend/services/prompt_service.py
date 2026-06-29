@@ -7,19 +7,21 @@ class PromptService:
 
         for chunk in chunks:
 
-            content = chunk.get("content") or "" 
+            if not chunk:
+                continue
 
-            pieces.append(
-              pieces.append(
-                f"""=== SOURCE ===
-                Title: {chunk["document_title"]}
-                File: {chunk.get("document_filename", "Unknown")}
-                Page: {chunk["page_number"]}
+            content = chunk.get("content") or ""
 
-                Content:
-                {chunk["content"]}
-                === END SOURCE ==="""
-                )
-            )
+            title = chunk.get("document_title") or "Unknown Document"
+            filename = chunk.get("document_filename") or "Unknown File"
+            page = chunk.get("page_number")
+
+            pieces.append(f"""=== SOURCE {chunk.get('id')} ===
+Title: {title}
+File: {filename}
+Page: {page}
+Content:
+{content}
+=== END SOURCE ===""")
 
         return "\n\n".join(pieces)
