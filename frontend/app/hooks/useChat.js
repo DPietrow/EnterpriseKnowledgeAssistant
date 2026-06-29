@@ -14,9 +14,9 @@ export default function useChat() {
       clearTimeout(lifecycleTimeoutRef.current);
     }
 
-    if (stage !== "complete") {
+    if (stage !== "completed") {
       lifecycleTimeoutRef.current = setTimeout(() => {
-        setLifecycle({ stage: "complete" });
+        setLifecycle({ stage: "completed" });
       }, 30000);
     }
   }, []);
@@ -50,9 +50,7 @@ export default function useChat() {
       }
     );
 
-    if (!res.body) {
-      throw new Error("No response stream available");
-    }
+    if (!res.body) throw new Error("No stream available");
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -76,7 +74,6 @@ export default function useChat() {
       );
     }
 
-    // finalize flush
     setMessages((prev) =>
       prev.map((m) =>
         m.id === assistantId

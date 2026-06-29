@@ -11,7 +11,7 @@ class StreamingService:
         for event in RAGOrchestrator.stream(question, context, chunks):
 
             # -------------------------
-            # DICT EVENTS (lifecycle/done)
+            # DICT EVENTS
             # -------------------------
             if isinstance(event, dict):
                 yield f"data: {json.dumps(event)}\n\n"
@@ -21,20 +21,20 @@ class StreamingService:
             # TOKEN EVENTS
             # -------------------------
             if isinstance(event, TokenEvent):
-                value = event.token
-
-                if not value or value.strip() == "":
-                    continue
-                
                 yield f"data: {json.dumps({
                     'type': 'token',
-                    'value': value
+                    'value': event.token
                 })}\n\n"
+                continue
 
             # -------------------------
             # CITATION EVENTS
             # -------------------------
-            elif isinstance(event, CitationEvent):
-                yield f"data: {json.dumps({'type': 'citations', 'data': event.citations})}\n\n"
+            if isinstance(event, CitationEvent):
+                yield f"data: {json.dumps({
+                    'type': 'citations',
+                    'data': event.citations
+                })}\n\n"
+                continue
 
-        yield "data: [DONE]\n\n"
+        yield f"data: {json.dumps({'type': 'done'})}\n\n"

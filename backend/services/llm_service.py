@@ -49,7 +49,7 @@ Question:
         )
 
         return response.choices[0].message.content
-    
+
     @staticmethod
     def stream_generate(question, context):
         client = LLMService.get_client()
@@ -60,21 +60,17 @@ Question:
                 messages=[
                     {
                         "role": "system",
-                        "content": (
-                            """ 
-                            You MUST ALWAYS include citations.
-                            
-                                CITATION FORMAT (mandatory):
-                                (📄 {Document Title} — Page {Page Number})
+                        "content": """
+    You are an enterprise knowledge assistant.
 
-                                Rules:
-                                - Always include document title
-                                - Never output page numbers alone
-                                - Never output similarity scores or chunk IDs
-                                - Citations must appear at end of sentence only
-                                - Do NOT place citations mid-word or mid-sentence
-                            """
-                        )
+    You MUST ALWAYS include citations in this format:
+    (📄 Document Title — Page Number)
+
+    Rules:
+    - Always include document title
+    - Never output similarity scores or chunk IDs
+    - Citations only at end of sentences
+    """
                     },
                     {
                         "role": "user",
@@ -85,27 +81,15 @@ Question:
                 stream=True,
             )
 
-            buffer = ""
-
+            # 🔥 PURE DELTA STREAM (NO BUFFER, NO SSE)
             for chunk in stream:
                 delta = chunk.choices[0].delta.content
-                if not delta:
-                    continue
-                
-                buffer += delta
+                if delta:
+                    yield delta
 
-                # flush on sentence boundary
-                if any(buffer.endswith(p) for p in [".", "?", "!", "\n"]):
-                    yield f"data: {buffer}\n\n"
-                    buffer = ""
-
-            if buffer:
-                yield f"data: {buffer}\n\n"
-
-            yield "data: [DONE]\n\n"
+            yield "\n[DONE]"
 
         except Exception as e:
             import traceback
-            print("🔥 STREAM ERROR")
             traceback.print_exc()
-            yield f"data: [ERROR] {str(e)}\n\n"
+            yield f"\n[ERROR]: {str(e)}"
