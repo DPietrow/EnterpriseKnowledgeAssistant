@@ -179,6 +179,7 @@ class DocumentService:
 
         document = Document(
             filename=filename,
+            title = filename.replace(".pdf", ""),
             filepath=filepath,
             status="queued",
             stage="queued"

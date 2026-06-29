@@ -1,3 +1,5 @@
+import os
+
 from services.embedding_service import EmbeddingService
 from models.chunk import Chunk
 from models.document import Document
@@ -34,7 +36,11 @@ class RetrievalService:
                 "page_number": chunk.page_number or 0,
 
                 # 🔥 HARD GUARANTEE: never None
-                "document_title": title or "Unknown Document",
+                "document_title": (
+                    title
+                    if title
+                    else os.path.splitext(filename)[0]
+                ),
                 "document_filename": filename or "Unknown File",
 
                 "score": float(score)
