@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from flask_cors import CORS
 load_dotenv()
 
 import os
@@ -9,7 +10,7 @@ def create_app():
     print("🚀 Flask factory starting...")
 
     app = Flask(__name__)
-
+    CORS(app)
     db_url = os.getenv("DATABASE_URL")
     print("ENV DATABASE_URL:", bool(db_url))
     print("ENV PORT:", os.getenv("PORT"))
