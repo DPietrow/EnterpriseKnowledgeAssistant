@@ -8,12 +8,12 @@ class PromptService:
         for chunk in chunks:
 
             pieces.append(
-f"""[SOURCE]
-Document Title: {chunk["document_title"]}
-Page Number: {chunk["page_number"]}
-Chunk ID: {chunk["chunk_index"]}
+f"""SOURCE:
+Title: {chunk["document_title"]}
+File: {chunk.get("document_filename")}
+Page: {chunk["page_number"]}
 
-Content:
+TEXT:
 {chunk["content"]}
 """
             )

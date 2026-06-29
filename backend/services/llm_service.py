@@ -53,7 +53,7 @@ Question:
     @staticmethod
     def stream_generate(question, context):
         client = LLMService.get_client()
-    
+
         try:
             stream = client.chat.completions.create(
                 model="gpt-4o-mini",
@@ -63,11 +63,10 @@ Question:
                         "content": (
                             "You are an enterprise knowledge assistant. "
                             "You answer ONLY using the provided context. "
-                            "When you use information, you MUST cite it like this:"
-                            "(📄 {Document Title}, Page {Page Number})"
-                            "Do NOT output raw similarity scores or chunk IDs."
-                            "Do NOT say 'Page 2' alone."
-                            "Always include the document title with page number in parentheses immediately after the fact."
+                            "When citing, ALWAYS use this exact format: (📄 <Document Title> — Page <Number>)"
+                            "Never omit the document title."
+                            "Never output only page numbers."
+                            "Never output similarity scores or chunk IDs."
                         )
                     },
                     {
@@ -78,28 +77,32 @@ Question:
                 temperature=0.2,
                 stream=True,
             )
-    
+
             buffer = ""
-    
+
             for chunk in stream:
-                delta = chunk.choices[0].delta.content
-    
+                try:
+                    delta = chunk.choices[0].delta.content
+                except Exception:
+                    continue
+
                 if not delta:
                     continue
-                
+
                 buffer += delta
-    
-                # 🚀 Flush on sentence boundaries for clean UX
-                if buffer.endswith((" ", ".", "?", "!", "\n")):
-                    yield buffer
+
+                # flush safely
+                if len(buffer) > 40:
+                    yield f"data: {buffer}\n\n"
                     buffer = ""
-    
-            # 🔥 flush remaining buffer at end
+
             if buffer:
-                yield buffer
-    
-            # optional completion marker (VERY useful for frontend)
-            yield "\n\n[DONE]"
-    
+                yield f"data: {buffer}\n\n"
+
+            yield "data: [DONE]\n\n"
+
         except Exception as e:
-            yield f"\n\n[STREAM ERROR]: {str(e)}"
+            import traceback
+            print("🔥 STREAM ERROR")
+            traceback.print_exc()
+            yield f"data: [ERROR] {str(e)}\n\n"
