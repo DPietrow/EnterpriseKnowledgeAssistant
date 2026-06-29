@@ -14,27 +14,27 @@ class StreamingService:
             # DICT EVENTS
             # -------------------------
             if isinstance(event, dict):
-                yield f"data: {json.dumps(event)}\n\n"
+                yield json.dumps(event)
                 continue
 
             # -------------------------
             # TOKEN EVENTS
             # -------------------------
             if isinstance(event, TokenEvent):
-                yield f"data: {json.dumps({
-                    'type': 'token',
-                    'value': event.token
-                })}\n\n"
+                yield json.dumps({
+                    "type": "token",
+                    "value": event.token
+                })
                 continue
 
             # -------------------------
             # CITATION EVENTS
             # -------------------------
             if isinstance(event, CitationEvent):
-                yield f"data: {json.dumps({
-                    'type': 'citations',
-                    'data': event.citations
-                })}\n\n"
+                yield json.dumps({
+                    "type": "citations",
+                    "data": event.citations
+                })
                 continue
 
-        yield f"data: {json.dumps({'type': 'done'})}\n\n"
+        yield json.dumps({"type": "done"})
