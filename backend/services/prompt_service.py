@@ -5,7 +5,7 @@ class PromptService:
 
         pieces = []
 
-        for chunk in chunks:
+        for i, chunk in enumerate(chunks or []):
 
             if not chunk:
                 continue
@@ -14,12 +14,17 @@ class PromptService:
 
             title = chunk.get("document_title") or "Unknown Document"
             filename = chunk.get("document_filename") or "Unknown File"
-            page = chunk.get("page_number")
 
-            pieces.append(f"""=== SOURCE {chunk.get('id')} ===
+            page = chunk.get("page_number")
+            page = str(page) if page is not None else "Unknown"
+
+            chunk_id = chunk.get("chunk_id") or f"chunk_{i}"
+
+            pieces.append(f"""=== SOURCE {chunk_id} ===
 Title: {title}
 File: {filename}
 Page: {page}
+
 Content:
 {content}
 === END SOURCE ===""")
