@@ -39,3 +39,11 @@ app = create_app()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)))
+
+@app.route("/")
+def health():
+    return {"status": "ok", "message": "API running"}, 200
+
+@app.route("/health")
+def health_check():
+    return "healthy", 200

@@ -22,7 +22,7 @@ export default function useUpload() {
     formData.append("file", file);
 
     const res = await fetch(
-      "http://127.0.0.1:5000/api/documents/upload",
+      "https://enterpriseknowledgeassistant.onrender.com/api/documents/upload",
       {
         method: "POST",
         body: formData,
@@ -59,7 +59,7 @@ export default function useUpload() {
 
     while (keepPolling) {
       const statusRes = await fetch(
-        `http://127.0.0.1:5000/api/documents/${documentId}/status`
+        `https://enterpriseknowledgeassistant.onrender.com/api/documents/${documentId}/status`
       );
 
       const status = await statusRes.json();

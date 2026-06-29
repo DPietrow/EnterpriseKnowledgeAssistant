@@ -16,7 +16,7 @@ export const askQuestion = async (query) => {
   }).then(r => r.json());
 };
 
-const BASE_URL = "http://127.0.0.1:5000/api/documents";
+const BASE_URL = "https://enterpriseknowledgeassistant.onrender.com/api/documents";
 
 export async function uploadDocument(file) {
   const formData = new FormData();
