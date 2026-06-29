@@ -84,11 +84,16 @@ def search():
         for result in results
     ])
 
-@document_bp.route("/ask-stream", methods=["POST"])
-@cross_origin(
-    origins="https://apollo-assistant.com"
-)
+@document_bp.route("/ask-stream", methods=["POST", "OPTIONS"])
 def ask_stream():
+
+    if request.method == "OPTIONS":
+        response = Response()
+        response.headers["Access-Control-Allow-Origin"] = "https://apollo-assistant.com"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+        return response
+
     data = request.get_json(force=True, silent=True) or {}
     question = data.get("query")
 
@@ -98,8 +103,16 @@ def ask_stream():
     chunks = RetrievalService.search(question)
     context = PromptService.build_context(chunks)
 
-    
-    return Response(
-        StreamingService.stream(question, context, chunks),
-        mimetype="text/event-stream"
-    )
+    def generate():
+        for token in StreamingService.stream(question, context, chunks):
+            yield token
+
+    response = Response(generate(), mimetype="text/event-stream")
+
+    response.headers["Access-Control-Allow-Origin"] = "https://apollo-assistant.com"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+    response.headers["Cache-Control"] = "no-cache"
+    response.headers["X-Accel-Buffering"] = "no"
+
+    return response

@@ -18,7 +18,10 @@ def create_app():
     CORS(
         app,
         resources={r"/api/*": {
-            "origins": "https://apollo-assistant.com"
+            "origins": [
+                "https://apollo-assistant.com",
+                "https://www.apollo-assistant.com"
+            ]
         }},
         supports_credentials=False,
         allow_headers=["Content-Type", "Authorization"],
