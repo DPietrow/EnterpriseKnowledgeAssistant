@@ -25,13 +25,19 @@ class RetrievalService:
             .all()
         )
 
-        return [
-            {
-                "content": chunk.content,
-                "page_number": chunk.page_number,
-                "document_title": title,
-                "document_filename": filename,
+        output = []
+
+        for chunk, title, filename, score in results:
+
+            output.append({
+                "content": chunk.content or "",
+                "page_number": chunk.page_number or 0,
+
+                # 🔥 HARD GUARANTEE: never None
+                "document_title": title or "Unknown Document",
+                "document_filename": filename or "Unknown File",
+
                 "score": float(score)
-            }
-            for chunk, title, filename, score in results
-        ]
+            })
+
+        return output

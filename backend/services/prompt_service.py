@@ -12,6 +12,7 @@ class PromptService:
 
             content = chunk.get("content") or ""
 
+            # 🔥 HARD SAFETY: always safe strings
             title = chunk.get("document_title") or "Unknown Document"
             filename = chunk.get("document_filename") or "Unknown File"
 
@@ -21,11 +22,11 @@ class PromptService:
             chunk_id = chunk.get("chunk_id") or f"chunk_{i}"
 
             pieces.append(f"""=== SOURCE {chunk_id} ===
-Title: {title}
-File: {filename}
-Page: {page}
+TITLE: {title}
+FILE: {filename}
+PAGE: {page}
 
-Content:
+CONTENT:
 {content}
 === END SOURCE ===""")
 
