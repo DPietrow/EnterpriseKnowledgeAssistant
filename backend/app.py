@@ -10,13 +10,15 @@ def create_app():
     print("🚀 Flask factory starting...")
 
     app = Flask(__name__)
-    CORS(app, resources={r"/*": {
-        "origins": [
-            "https://enterprise-knowledge-assistant-tau.vercel.app"
-        ]
-    }},
-     supports_credentials=True
+
+    CORS(
+        app,
+        resources={r"/api/*": {
+            "origins": "https://enterprise-knowledge-assistant-tau.vercel.app"
+        }},
+        supports_credentials=True
     )
+
     db_url = os.getenv("DATABASE_URL")
     print("ENV DATABASE_URL:", bool(db_url))
     print("ENV PORT:", os.getenv("PORT"))
@@ -34,10 +36,20 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)
+
     print("🔥 BEFORE IMPORT document_routes")
     from routes.document_routes import document_bp
     print("🔥 AFTER IMPORT document_routes")
+
     app.register_blueprint(document_bp, url_prefix="/api/documents")
+
+    @app.route("/")
+    def health():
+        return {"status": "ok"}, 200
+
+    @app.route("/health")
+    def health_check():
+        return "healthy", 200
 
     print("✅ App created")
     return app
@@ -47,11 +59,3 @@ app = create_app()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)))
-
-@app.route("/")
-def health():
-    return {"status": "ok", "message": "API running"}, 200
-
-@app.route("/health")
-def health_check():
-    return "healthy", 200
