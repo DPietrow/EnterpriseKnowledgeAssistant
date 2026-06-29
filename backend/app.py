@@ -25,7 +25,9 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)
+    print("🔥 BEFORE IMPORT document_routes")
     from routes.document_routes import document_bp
+    print("🔥 AFTER IMPORT document_routes")
     app.register_blueprint(document_bp, url_prefix="/api/documents")
 
     print("✅ App created")
