@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 load_dotenv()
+
 import os
 from flask import Flask
 from extensions import db, migrate
@@ -13,7 +14,7 @@ def create_app():
     if not db_url:
         raise Exception("DATABASE_URL is missing")
 
-    # 🔥 normalize Render/Postgres compatibility
+    # Normalize Render Postgres URL
     if db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
 
@@ -23,9 +24,13 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+    # init db FIRST
     db.init_app(app)
+
+    # init migrate ONCE (from extensions)
     migrate.init_app(app, db)
 
+    # routes
     from routes.document_routes import document_bp
     app.register_blueprint(document_bp, url_prefix="/api/documents")
 
